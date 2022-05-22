@@ -9,4 +9,4 @@ cargo clippy --locked --all-targets --all-features -- -D clippy::all -D clippy::
 
 cargo test --locked
 
-./scripts/test-invocation-variants.sh
+./scripts/test-cargo-public-api-invocation-variants.sh

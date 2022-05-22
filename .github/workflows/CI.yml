@@ -45,7 +45,7 @@ jobs:
       - run: cargo test --locked
 
   test-invocation-variants:
-    name: scripts/test-invocation-variants.sh
+    name: scripts/test-cargo-public-api-invocation-variants.sh
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -53,4 +53,4 @@ jobs:
         with:
           toolchain: nightly
           profile: minimal
-      - run: scripts/test-invocation-variants.sh
+      - run: scripts/test-cargo-public-api-invocation-variants.sh
