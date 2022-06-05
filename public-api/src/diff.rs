@@ -188,15 +188,15 @@ mod tests {
     #[test]
     fn no_off_by_one_diff_skewing() {
         let old = vec![
-            fn_with_param_type(["a", "b"], "i8"),
-            fn_with_param_type(["a", "b"], "i32"),
-            fn_with_param_type(["a", "b"], "i64"),
+            fn_with_param_type(&["a", "b"], "i8"),
+            fn_with_param_type(&["a", "b"], "i32"),
+            fn_with_param_type(&["a", "b"], "i64"),
         ];
         let new = vec![
-            fn_with_param_type(["a", "b"], "u8"),
-            fn_with_param_type(["a", "b"], "i8"),
-            fn_with_param_type(["a", "b"], "i32"),
-            fn_with_param_type(["a", "b"], "i64"),
+            fn_with_param_type(&["a", "b"], "u8"),
+            fn_with_param_type(&["a", "b"], "i8"),
+            fn_with_param_type(&["a", "b"], "i32"),
+            fn_with_param_type(&["a", "b"], "i64"),
         ];
         let expected = PublicItemsDiff {
             removed: vec![item_with_path("2")],
@@ -217,7 +217,7 @@ mod tests {
         }
     }
 
-    fn fn_with_param_type<P: IntoIterator<Item = String>>(path: P, type_: &str) -> PublicItem {
+    fn fn_with_param_type(path_str: &[&str], type_: &str) -> PublicItem {
         fn s(s: &str) -> Token {
             Token::symbol(s)
         }
@@ -242,22 +242,24 @@ mod tests {
             Token::Whitespace
         }
 
+        let path: Vec<_> = path_str
+            .iter()
+            .map(std::string::ToString::to_string)
+            .collect();
+
         // Begin with "pub fn "
         let mut tokens = vec![q("pub"), w(), k("fn"), w()];
 
         // Add path e.g. "a::b"
         tokens.extend(itertools::intersperse(
-            path.into_iter().copied().map(Token::identifier),
+            path.iter().cloned().map(Token::identifier),
             Token::symbol("::"),
         ));
 
-        // Append "(x: usize)"
+        // Append function "(x: usize)"
         tokens.extend(vec![q("("), i("x"), s(":"), w(), t(type_), q(")")]);
 
-        // End result PublicItem is e.g. "pub fn a::b(x: usize)"
-        PublicItem {
-            path: path.into_iter().collect(),
-            tokens,
-        }
+        // End result is e.g. "pub fn a::b(x: usize)"
+        PublicItem { path, tokens }
     }
 }
