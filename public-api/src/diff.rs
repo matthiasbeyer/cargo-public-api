@@ -199,9 +199,9 @@ mod tests {
             fn_with_param_type(&["a", "b"], "i64"),
         ];
         let expected = PublicItemsDiff {
-            removed: vec![item_with_path("2")],
+            removed: vec![],
             changed: vec![],
-            added: vec![],
+            added: vec![fn_with_param_type(&["a", "b"], "u8")],
         };
         let actual = PublicItemsDiff::between(old, new);
         assert_eq!(actual, expected);
