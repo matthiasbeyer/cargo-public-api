@@ -116,8 +116,6 @@ impl PublicItemsDiff {
 
 #[cfg(test)]
 mod tests {
-    use itertools::Itertools;
-
     use crate::tokens::Token;
 
     use super::*;
@@ -190,13 +188,23 @@ mod tests {
     #[test]
     fn no_off_by_one_diff_skewing() {
         let old = vec![
-            item_with_suffix(["a", "b"], vec![Token::symbol("("), Token::identifier("a"), ])
-                path: ,
-            },
-            item_with_path("2"),
-            item_with_path("3"),
+            fn_with_param_type(["a", "b"], "i8"),
+            fn_with_param_type(["a", "b"], "i32"),
+            fn_with_param_type(["a", "b"], "i64"),
         ];
-        let new = vec![item_with_path("1"), item_with_path("3")];
+        let new = vec![
+            fn_with_param_type(["a", "b"], "u8"),
+            fn_with_param_type(["a", "b"], "i8"),
+            fn_with_param_type(["a", "b"], "i32"),
+            fn_with_param_type(["a", "b"], "i64"),
+        ];
+        let expected = PublicItemsDiff {
+            removed: vec![item_with_path("2")],
+            changed: vec![],
+            added: vec![],
+        };
+        let actual = PublicItemsDiff::between(old, new);
+        assert_eq!(actual, expected);
     }
 
     fn item_with_path(path: &str) -> PublicItem {
@@ -209,34 +217,40 @@ mod tests {
         }
     }
 
-    fn fn_with_param_type<P: IntoIterator<String>>(path: P, type_: &str) -> PublicItem {
+    fn fn_with_param_type<P: IntoIterator<Item = String>>(path: P, type_: &str) -> PublicItem {
         fn s(s: &str) -> Token {
             Token::symbol(s)
         }
-    
+
         fn t(s: &str) -> Token {
             Token::type_(s)
         }
-    
+
         fn q(s: &str) -> Token {
             Token::qualifier(s)
         }
-    
+
         fn k(s: &str) -> Token {
             Token::kind(s)
         }
-    
+
+        fn i(s: &str) -> Token {
+            Token::identifier(s)
+        }
+
         fn w() -> Token {
-            Token::whitespace()
+            Token::Whitespace
         }
 
         let mut tokens = vec![q("pub"), w(), k("fn"), w()];
-        tokens.extend(itertools::intersperse(path.iter().copied().map(Token::identifier), Token::symbol("::")));
-        tokens.extend(vec![q("("), w(), k("fn"), w()]);
+        tokens.extend(itertools::intersperse(
+            path.into_iter().copied().map(Token::identifier),
+            Token::symbol("::"),
+        ));
+        tokens.extend(vec![q("("), i("x"), s(":"), w(), t(type_), q(")")]);
         PublicItem {
-            path: path.into_iter().map().collect(),
-            tokens
+            path: path.into_iter().collect(),
+            tokens,
         }
     }
 }
-
