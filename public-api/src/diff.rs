@@ -242,12 +242,19 @@ mod tests {
             Token::Whitespace
         }
 
+        // Begin with "pub fn "
         let mut tokens = vec![q("pub"), w(), k("fn"), w()];
+
+        // Add path e.g. "a::b"
         tokens.extend(itertools::intersperse(
             path.into_iter().copied().map(Token::identifier),
             Token::symbol("::"),
         ));
+
+        // Append "(x: usize)"
         tokens.extend(vec![q("("), i("x"), s(":"), w(), t(type_), q(")")]);
+
+        // End result PublicItem is e.g. "pub fn a::b(x: usize)"
         PublicItem {
             path: path.into_iter().collect(),
             tokens,
