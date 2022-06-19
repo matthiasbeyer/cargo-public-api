@@ -269,6 +269,7 @@ mod tests {
                 .split("::")
                 .map(std::string::ToString::to_string)
                 .collect(),
+            attributes: vec![],
             tokens: vec![crate::tokens::Token::identifier(path)],
         }
     }
@@ -292,7 +293,11 @@ mod tests {
         tokens.extend(vec![q("("), i("x"), s(":"), w(), t(type_), q(")")]);
 
         // End result is e.g. "pub fn a::b(x: usize)"
-        PublicItem { path, tokens }
+        PublicItem {
+            path,
+            attributes: vec![],
+            tokens,
+        }
     }
 
     fn s(s: &str) -> Token {

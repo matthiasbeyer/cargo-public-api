@@ -175,6 +175,7 @@ fn intermediate_public_item_to_public_item(
             .iter()
             .map(|i| i.get_effective_name())
             .collect::<PublicItemPath>(),
+        attributes: public_item.item.attrs.clone(),
         tokens: public_item.render_token_stream(),
     }
 }
@@ -187,6 +188,9 @@ fn intermediate_public_item_to_public_item(
 pub struct PublicItem {
     /// The "your_crate::mod_a::mod_b" part of an item. Split by "::"
     pub(crate) path: PublicItemPath,
+
+    /// Vec of attributes on the item, e.g. `"#[non_exhaustive]"`
+    pub(crate) attributes: Vec<String>,
 
     /// The rendered item as a stream of [`Token`]s
     pub(crate) tokens: Vec<Token>,
