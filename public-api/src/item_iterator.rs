@@ -175,7 +175,7 @@ fn intermediate_public_item_to_public_item(
             .iter()
             .map(|i| i.get_effective_name())
             .collect::<PublicItemPath>(),
-        attributes: public_item.item.attrs.clone(),
+        attrs: public_item.item.attrs.clone(),
         tokens: public_item.render_token_stream(),
     }
 }
@@ -190,7 +190,7 @@ pub struct PublicItem {
     pub(crate) path: PublicItemPath,
 
     /// Vec of attributes on the item, e.g. `"#[non_exhaustive]"`
-    pub(crate) attributes: Vec<String>,
+    pub(crate) attrs: Vec<String>,
 
     /// The rendered item as a stream of [`Token`]s
     pub(crate) tokens: Vec<Token>,
@@ -215,6 +215,9 @@ impl std::fmt::Debug for PublicItem {
 /// we implement `Display` for it.
 impl Display for PublicItem {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for attr in &self.attrs {
+            writeln!(f, "{}", attr)?;
+        }
         write!(f, "{}", tokens_to_string(&self.tokens))
     }
 }
