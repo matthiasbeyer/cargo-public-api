@@ -169,19 +169,19 @@ pub fn public_api_in_crate(
 fn intermediate_public_item_to_public_item(
     public_item: &Rc<IntermediatePublicItem<'_>>,
 ) -> PublicItem {
+    let mut attrs = vec![];
+    for attr in &public_item.item.attrs {
+        if attr_relevant_for_public_apis(attr) {
+            attrs.push(attr.to_owned())
+        }
+    }
     PublicItem {
         path: public_item
             .path()
             .iter()
             .map(|i| i.get_effective_name())
             .collect::<PublicItemPath>(),
-        attrs: public_item
-            .item
-            .attrs
-            .iter()
-            .to_owned()
-            .filter(attr_relevant_for_public_apis)
-            .collect(),
+        attrs,
         tokens: public_item.render_token_stream(),
     }
 }
