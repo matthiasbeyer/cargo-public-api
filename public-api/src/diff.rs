@@ -269,7 +269,7 @@ mod tests {
                 .split("::")
                 .map(std::string::ToString::to_string)
                 .collect(),
-            attributes: vec![],
+            attrs: vec![],
             tokens: vec![crate::tokens::Token::identifier(path)],
         }
     }
@@ -295,7 +295,7 @@ mod tests {
         // End result is e.g. "pub fn a::b(x: usize)"
         PublicItem {
             path,
-            attributes: vec![],
+            attrs: vec![],
             tokens,
         }
     }
