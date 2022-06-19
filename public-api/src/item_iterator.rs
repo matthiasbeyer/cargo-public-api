@@ -175,8 +175,21 @@ fn intermediate_public_item_to_public_item(
             .iter()
             .map(|i| i.get_effective_name())
             .collect::<PublicItemPath>(),
-        attrs: public_item.item.attrs.clone(),
+        attrs: public_item
+            .item
+            .attrs
+            .iter()
+            .filter(attr_relevant_for_public_apis)
+            .map(|s| s.to_string())
+            .collect(),
         tokens: public_item.render_token_stream(),
+    }
+}
+
+fn attr_relevant_for_public_apis<S: AsRef<str>>(attr: S) -> bool {
+    match attr.as_ref() {
+        "#[non_exhaustive]" => true,
+        _ => false,
     }
 }
 
