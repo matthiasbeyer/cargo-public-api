@@ -179,8 +179,8 @@ fn intermediate_public_item_to_public_item(
             .item
             .attrs
             .iter()
+            .to_owned()
             .filter(attr_relevant_for_public_apis)
-            .map(|s| s.to_string())
             .collect(),
         tokens: public_item.render_token_stream(),
     }
