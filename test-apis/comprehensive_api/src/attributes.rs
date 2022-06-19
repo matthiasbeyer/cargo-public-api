@@ -10,3 +10,8 @@ pub enum NonExhaustive {
 pub fn must_use() -> usize {
     0
 }
+
+#[repr(C)]
+pub struct C {
+    pub b: bool,
+}
