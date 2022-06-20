@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fmt::Display, rc::Rc};
+use std::{collections::HashMap, fmt::Display, rc::Rc, str::pattern::Pattern};
 
 use rustdoc_types::{Crate, Id, Impl, Item, ItemEnum, Type};
 
@@ -186,11 +186,25 @@ fn intermediate_public_item_to_public_item(
     }
 }
 
+/// Our list of allowed attributes come from
+/// <https://github.com/rust-lang/rust/blob/68d0b29098/src/librustdoc/html/render/mod.rs#L941-L942>
 fn attr_relevant_for_public_apis<S: AsRef<str>>(attr: S) -> bool {
-    match attr.as_ref() {
-        "#[non_exhaustive]" => true,
-        _ => false,
+    let prefixes = [
+        "#[export_name",
+        "#[link_section",
+        "#[no_mangle",
+        "#[repr",
+        "#[non_exhaustive",
+        "#[non_exhaustive",
+    ];
+
+    for prefix in prefixes {
+        if attr.as_ref().starts_with(prefix) {
+            return true;
+        }
     }
+
+    return false;
 }
 
 /// Represent a public item of an analyzed crate, i.e. an item that forms part
