@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fmt::Display, rc::Rc, str::pattern::Pattern};
+use std::{collections::HashMap, fmt::Display, rc::Rc};
 
 use rustdoc_types::{Crate, Id, Impl, Item, ItemEnum, Type};
 
@@ -193,9 +193,8 @@ fn attr_relevant_for_public_apis<S: AsRef<str>>(attr: S) -> bool {
         "#[export_name",
         "#[link_section",
         "#[no_mangle",
+        "#[non_exhaustive",
         "#[repr",
-        "#[non_exhaustive",
-        "#[non_exhaustive",
     ];
 
     for prefix in prefixes {
