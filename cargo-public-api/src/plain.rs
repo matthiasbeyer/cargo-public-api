@@ -14,9 +14,9 @@ impl OutputFormatter for Plain {
     fn print_items(&self, w: &mut dyn Write, args: &Args, items: Vec<PublicItem>) -> Result<()> {
         for item in items {
             if args.color.active() {
-                writeln!(w, "{}", color_item(&item))?;
+                writeln!(w, " {}", color_item(&item))?;
             } else {
-                writeln!(w, "{}", item)?;
+                writeln!(w, " {}", item)?;
             }
         }
 
@@ -28,22 +28,20 @@ impl OutputFormatter for Plain {
 
         print_items_with_header(
             w,
-            "Removed items from the public API\n\
-             =================================",
+            " Removed items from the public API\n =================================",
             &diff.removed,
             |w, item| {
                 if use_color {
-                    writeln!(w, "-{}", color_item(item))
+                    writeln!(w, " -{}", color_item(item))
                 } else {
-                    writeln!(w, "-{}", item)
+                    writeln!(w, " -{}", item)
                 }
             },
         )?;
 
         print_items_with_header(
             w,
-            "Changed items in the public API\n\
-             ===============================",
+            " Changed items in the public API\n ===============================",
             &diff.changed,
             |w, changed_item| {
                 if use_color {
@@ -52,7 +50,7 @@ impl OutputFormatter for Plain {
                     let diff_slice = diff::slice(old_tokens.as_slice(), new_tokens.as_slice());
                     writeln!(
                         w,
-                        "-{}\n+{}",
+                        " -{}\n +{}",
                         color_item_with_diff(&diff_slice, true),
                         color_item_with_diff(&diff_slice, false),
                     )
@@ -64,14 +62,13 @@ impl OutputFormatter for Plain {
 
         print_items_with_header(
             w,
-            "Added items to the public API\n\
-             =============================",
+            " Added items to the public API\n =============================",
             &diff.added,
             |w, item| {
                 if use_color {
-                    writeln!(w, "+{}", color_item(item))
+                    writeln!(w, " +{}", color_item(item))
                 } else {
-                    writeln!(w, "+{}", item)
+                    writeln!(w, " +{}", item)
                 }
             },
         )?;

@@ -17,7 +17,7 @@ pub fn print_items_with_header<T>(
 ) -> Result<()> {
     writeln!(w, "{}", header)?;
     if items.is_empty() {
-        writeln!(w, "(none)")?;
+        writeln!(w, " (none)")?;
     } else {
         for item in items {
             print_fn(w, item)?;
