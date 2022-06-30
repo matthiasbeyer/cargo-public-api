@@ -166,13 +166,13 @@ fn get_args() -> Args {
 /// directory.
 fn build_rustdoc_json(args: &Args) -> Result<()> {
     let mut command = std::process::Command::new("cargo");
-    command.args([&args.rustdoc_json_toolchain, "doc", "--lib", "--no-deps"]);
+    command.args([&args.rustdoc_json_toolchain, "rustdoc"]);
     command.arg("--manifest-path");
     command.arg(&args.manifest_path);
-    command.env(
-        "RUSTDOCFLAGS",
-        "-Z unstable-options --output-format json --cap-lints warn",
-    );
+    command.arg("--");
+    command.args(["-Z", "unstable-options"]);
+    command.args(["--output-format", "json"]);
+    command.args(["--cap-lints", "warn"]);
     if command.spawn()?.wait()?.success() {
         Ok(())
     } else {
