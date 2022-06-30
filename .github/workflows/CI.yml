@@ -26,11 +26,11 @@ jobs:
       - run: cargo fmt -- --check
 
   cargo-doc:
-    name: RUSTDOCFLAGS='--deny warnings' cargo doc
+    name: cargo rustdoc -- --deny warnings
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: RUSTDOCFLAGS='--deny warnings' cargo doc --locked --no-deps
+      - run: cargo rustdoc -- --deny warnings --locked --no-deps
 
   cargo-clippy:
     name: cargo clippy -- --deny clippy::all --deny clippy::pedantic ...
