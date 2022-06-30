@@ -28,9 +28,7 @@ fn build_rustdoc_json<P: AsRef<Path>>(manifest_path: P) -> PathBuf {
     // so be quiet to make running tests much less noisy
     command.arg("--quiet");
 
-    command.arg("--");
-
-    command.args(["-Z", "unstable-options", "--output-format", "json"]);
+    command.args(["--", "-Z", "unstable-options", "--output-format", "json"]);
 
     assert!(command.spawn().unwrap().wait().unwrap().success());
 

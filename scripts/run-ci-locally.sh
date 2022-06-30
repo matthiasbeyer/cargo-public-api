@@ -7,7 +7,7 @@ set -o nounset -o pipefail -o errexit -o xtrace
 
 cargo fmt -- --check
 
-cargo rustdoc -- --deny warnings --locked --no-deps
+RUSTDOCFLAGS='--deny warnings' cargo doc --locked --no-deps
 
 cargo clippy --locked --all-targets --all-features -- --deny clippy::all --deny clippy::pedantic --deny dead_code
 

@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cargo rustdoc -- --deny warnings --locked --no-deps
+      - run: RUSTDOCFLAGS='--deny warnings' cargo doc --locked --no-deps
 
   cargo-clippy:
     name: cargo clippy -- --deny clippy::all --deny clippy::pedantic ...
